@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+
+	<context:annotation-config />
+	<context:component-scan base-package="kosta" />
+
+	<mvc:annotation-driven />
+	<mvc:default-servlet-handler />
+	<!-- index.html 이 mvc에서 찾아 컨트롤러에 없으면 실행하지 못하게 하고 톰캣에게 실행하라고 떠넘김 -->
+
+
+	<!-- 1. <bean id="helloController" class="kosta.controller.HelloController"> 
+		<constructor-arg ref="Service"/></bean> <bean id="Service" class="kosta.service.HelloService"/> -->
+
+
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver"> <!-- jsp파일로 만들어준다. -->
+		<property name="prefix" value="/view/" /> <!-- 루트폴더 안에 view 폴더 안에 -->
+		<property name="suffix" value=".jsp" /> <!-- 뒷명은 .jsp -->
+	</bean>
+	
+	<!-- DB Setting  -->
+	
+	<!--3. sqlSessionTemplate 생성 -->
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+	<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
+	
+	
+	<!--2. SqlSessionFactory 생성-->
+	<bean id="sqlSessionFactory"
+	class="org.mybatis.spring.SqlSessionFactoryBean">  
+	<property name="dataSource" ref="dataSource"/>
+	<property name="configLocation" value="/WEB-INF/mybatis-config.xml"/>
+	</bean>
+	
+	
+	<!--1. 데이터 소스객체 생성  -->
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+	<property name="jndiName" value="jdbc/oracle"/>
+	<property name="resourceRef" value="true"/>
+	
+	</bean>
+
+</beans>
