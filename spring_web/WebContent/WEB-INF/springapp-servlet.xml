@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
@@ -23,33 +22,55 @@
 
 
 
+
+
+	<!-- Tiles Setting -->
+
+	<bean id="tilesConfigurer"
+		class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+		<property name="definitions">
+			<list>
+				<value>/WEB-INF/tiles2def.xml</value>
+			</list>
+		</property>
+	</bean>
+
+
+	<bean id="viewResolver2"
+		class="org.springframework.web.servlet.view.UrlBasedViewResolver"> <!-- tiles 로 만들어 준다.  -->
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.tiles3.TilesView" />
+		<property name="order" value="1" /> <!-- 우선순위 뷰리졸브의 우선순위-->
+	</bean>
+
+
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver"> <!-- jsp파일로 만들어준다. -->
 		<property name="prefix" value="/view/" /> <!-- 루트폴더 안에 view 폴더 안에 -->
 		<property name="suffix" value=".jsp" /> <!-- 뒷명은 .jsp -->
+		<property name="order" value="2" />
 	</bean>
 	
-	<!-- DB Setting  -->
-	
+	<!-- DB Setting -->
+
 	<!--3. sqlSessionTemplate 생성 -->
 	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
-	<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>
+		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory" />
 	</bean>
-	
-	
-	<!--2. SqlSessionFactory 생성-->
-	<bean id="sqlSessionFactory"
-	class="org.mybatis.spring.SqlSessionFactoryBean">  
-	<property name="dataSource" ref="dataSource"/>
-	<property name="configLocation" value="/WEB-INF/mybatis-config.xml"/>
+
+
+	<!--2. SqlSessionFactory 생성 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="/WEB-INF/mybatis-config.xml" />
 	</bean>
-	
-	
-	<!--1. 데이터 소스객체 생성  -->
+
+
+	<!--1. 데이터 소스객체 생성 -->
 	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-	<property name="jndiName" value="jdbc/oracle"/>
-	<property name="resourceRef" value="true"/>
-	
+		<property name="jndiName" value="jdbc/oracle" />
+		<property name="resourceRef" value="true" />
+
 	</bean>
 
 </beans>

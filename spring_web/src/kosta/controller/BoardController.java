@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -96,8 +97,18 @@ public class BoardController {
 
 		return "list";
 	}
-	@RequestMapping("board_detail")
+	//RequestParam
+/*	@RequestMapping("board_detail")
 	public String DetailBoard(@RequestParam("seq") int seq ,Model model){
+		Board board= serv.detailBoardService(seq);
+		model.addAttribute("board", board);
+		
+		return "detail";
+		
+	}*/
+	//PathVariable
+	@RequestMapping("board_detail{seq}")
+	public String DetailBoard(@PathVariable int seq ,Model model){
 		Board board= serv.detailBoardService(seq);
 		model.addAttribute("board", board);
 		
