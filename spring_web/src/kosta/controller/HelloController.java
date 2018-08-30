@@ -47,4 +47,10 @@ public String hello(Model model) {
 	return "hello";
 }*/
 
+
+@RequestMapping("/spring_client") 
+public String spring_client(){
+	return "client";
+}
+
 }

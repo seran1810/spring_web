@@ -1,5 +1,6 @@
 package kosta.controller;
 
+import java.io.File;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import kosta.model.Board;
 import kosta.model.BoardValidator;
@@ -25,6 +27,7 @@ import kosta.service.HelloService;
 public class BoardController {
 
 	private BoardService serv;
+	private String uploadDir= "E:/upload";
 
 	public BoardController(BoardService serv) {
 		super();
@@ -76,9 +79,23 @@ public class BoardController {
 			return "insert_form";
 		}
 		
-		serv.insertBoardService(board);
+		  MultipartFile multi = board.getUploadFile();
+	      if(multi != null){
+	         String fname = multi.getOriginalFilename(); //파일 이름 꺼내기
+	         System.out.println("file: " + fname);
+	         board.setFname(fname); //board에 filename 넣기.
+	         
+	         try {
+	            multi.transferTo(new File(uploadDir,fname));
+	         } catch (Exception e) {
+	            e.printStackTrace();
+	         }
+	         
+	      }
+	      serv.insertBoardService(board);
+	      
+	      return "redirect:board_list"; //새로운 요청이니  redirect
 
-		return "redirect:board_list";
 
 	}
 	
@@ -114,5 +131,20 @@ public class BoardController {
 		
 		return "detail";
 		
+	}
+	
+	@RequestMapping("spring_client1")
+	public String spring_client1(){
+		
+		return "jlist";
+	}
+	
+	@RequestMapping("board_download")
+	public String board_download(@RequestParam("filename") String filename
+			,Model model )throws Exception{
+		File file= new File(uploadDir, filename);
+		model.addAttribute("downloadFile", file);
+		
+		return "downloadView";
 	}
 }

@@ -11,6 +11,7 @@
 		<li>번호: ${board.seq }</li>
 		<li>제목: ${board.title }</li>
 		<li>작성자: ${board.writer }</li>		
+		<li>파일:<a href="board_download?filename=${board.fname}">${board.fname}</a></li>		
 		<li>내용: ${board.contents }</li>
 	</ul>
 </body>

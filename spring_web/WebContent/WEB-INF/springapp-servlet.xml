@@ -3,10 +3,13 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
 		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 
 
 	<context:annotation-config />
@@ -21,7 +24,26 @@
 		<constructor-arg ref="Service"/></bean> <bean id="Service" class="kosta.service.HelloService"/> -->
 
 
+	<!-- File up/down Setting -->
+<bean id="multipartResolver"
+      class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 
+	<bean id="downloadView" class="kosta.view.DownloadView"></bean>
+	<!-- Transaction Setting -->
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+
+
+	<!-- Aop Setting -->
+
+	<aop:aspectj-autoproxy />
+	<bean id="sessionAspect" class="kosta.aspect.SessionAspect" />
 
 
 	<!-- Tiles Setting -->
@@ -35,12 +57,16 @@
 		</property>
 	</bean>
 
+	<bean id="viewResolver3"
+		class="org.springframework.web.servlet.view.BeanNameViewResolver">
+		<property name="order" value="1" />
+	</bean>
 
 	<bean id="viewResolver2"
-		class="org.springframework.web.servlet.view.UrlBasedViewResolver"> <!-- tiles 로 만들어 준다.  -->
+		class="org.springframework.web.servlet.view.UrlBasedViewResolver"> <!-- tiles 로 만들어 준다. -->
 		<property name="viewClass"
 			value="org.springframework.web.servlet.view.tiles3.TilesView" />
-		<property name="order" value="1" /> <!-- 우선순위 뷰리졸브의 우선순위-->
+		<property name="order" value="2" /> <!-- 우선순위 뷰리졸브의 우선순위 -->
 	</bean>
 
 
@@ -48,9 +74,9 @@
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver"> <!-- jsp파일로 만들어준다. -->
 		<property name="prefix" value="/view/" /> <!-- 루트폴더 안에 view 폴더 안에 -->
 		<property name="suffix" value=".jsp" /> <!-- 뒷명은 .jsp -->
-		<property name="order" value="2" />
+		<property name="order" value="3" />  <!-- null 을 return 하지못해서 우선순위가 마지막이여야 한다. -->
 	</bean>
-	
+
 	<!-- DB Setting -->
 
 	<!--3. sqlSessionTemplate 생성 -->

@@ -15,12 +15,15 @@
 <body>
 	<h3>${title }</h3>
 	<hr>
-	<form:form action="board_insert" method="post" commandName="boardCommand">
-	작성자 : <form:input type="text" path="writer"/>
-           <form:errors path="writer" cssClass="error"/><br>
-	제목 :  <form:input type="text" path="title"/>
-		   <form:errors path="title" cssClass="error"/>
-		<br>		
+	<form:form action="board_insert" method="post"
+		commandName="boardCommand" enctype="multipart/form-data">
+	작성자 : <form:input type="text" path="writer" />
+		<form:errors path="writer" cssClass="error" />
+		<br>
+	제목 :  <form:input type="text" path="title" />
+		<form:errors path="title" cssClass="error" />
+		<br>
+	파일:<input type="file" name="uploadFile" />		
 	내용 <br>
 		<form:textarea rows="6" cols="70" path="contents"></form:textarea>
 		<br>
